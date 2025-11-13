@@ -1,0 +1,36 @@
+{
+  "name": "cse341-w3-w4",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "web": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dandrichest/cse341-w3-w4.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dandrichest/cse341-w3-w4/issues"
+  },
+  "homepage": "https://github.com/dandrichest/cse341-w3-w4#readme",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-validator": "^7.3.0",
+    "mongoose": "^8.19.3",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.1",
+    "nodemon": "^3.1.11",
+    "prettier": "^3.6.2"
+  }
+}

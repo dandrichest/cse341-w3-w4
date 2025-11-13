@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DevConnect</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Developer Directory</h1>
+
+  <form id="devForm">
+  <input type="text" id="name" placeholder="Name" required />
+  <input type="email" id="email" placeholder="Email" required />
+  <input type="text" id="skills" placeholder="Skills (comma-separated)" required />
+  <input type="text" id="bio" placeholder="Short Bio" />
+  <input type="text" id="location" placeholder="Location" />
+  <input type="url" id="github" placeholder="GitHub URL" />
+  <input type="url" id="website" placeholder="Personal Website URL" />
+  <button type="submit">Add Developer</button>
+</form>
+  <ul id="devList"></ul>
+
+  <script src="script.js"></script>
+</body>
+</html>
