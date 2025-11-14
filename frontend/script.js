@@ -1,4 +1,4 @@
-const API_URL = 'https://your-api-url.onrender.com/api/developers'; // Replace with your actual URL
+const API_URL = 'https://cse341-w3-w4-ecbc.onrender.com/api/developers'; // Replace with your actual URL
 
 const form = document.getElementById('devForm');
 const devList = document.getElementById('devList');
