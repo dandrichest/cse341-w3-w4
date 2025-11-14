@@ -2,6 +2,10 @@ openapi: 3.0.0
 info:
   title: DevConnect API
   version: 1.0.0
+  description: API for managing developers, projects, and tools
+servers:
+  - url: /
+    description: Current server
 paths:
   /api/developers:
     get:
@@ -9,6 +13,12 @@ paths:
       responses:
         '200':
           description: A list of developers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Developer'
     post:
       summary: Create a developer
       requestBody:
@@ -16,25 +26,55 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                email:
-                  type: string
-                skills:
-                  type: array
-                  items:
-                    type: string
+              $ref: '#/components/schemas/Developer'
       responses:
         '201':
-          description: Developer created
+          description: Developer created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Developer'
+  /api/developers/{id}:
+    put:
+      summary: Update a developer
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Developer'
+      responses:
+        '200':
+          description: Developer updated successfully
+    delete:
+      summary: Delete a developer
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Developer deleted successfully
   /api/projects:
     get:
       summary: Get all projects
       responses:
         '200':
           description: A list of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
     post:
       summary: Create a project
       requestBody:
@@ -45,7 +85,11 @@ paths:
               $ref: '#/components/schemas/Project'
       responses:
         '201':
-          description: Project created
+          description: Project created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
   /api/projects/{id}:
     put:
       summary: Update a project
@@ -56,13 +100,14 @@ paths:
           schema:
             type: string
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Project'
       responses:
         '200':
-          description: Project updated
+          description: Project updated successfully
     delete:
       summary: Delete a project
       parameters:
@@ -73,13 +118,19 @@ paths:
             type: string
       responses:
         '200':
-          description: Project deleted
+          description: Project deleted successfully
   /api/tools:
     get:
       summary: Get all tools
       responses:
         '200':
           description: A list of tools
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tool'
     post:
       summary: Create a tool
       requestBody:
@@ -90,7 +141,11 @@ paths:
               $ref: '#/components/schemas/Tool'
       responses:
         '201':
-          description: Tool created
+          description: Tool created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tool'
   /api/tools/{id}:
     put:
       summary: Update a tool
@@ -101,13 +156,14 @@ paths:
           schema:
             type: string
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Tool'
       responses:
         '200':
-          description: Tool updated
+          description: Tool updated successfully
     delete:
       summary: Delete a tool
       parameters:
@@ -118,45 +174,80 @@ paths:
             type: string
       responses:
         '200':
-          description: Tool deleted
+          description: Tool deleted successfully
 components:
   schemas:
     Developer:
       type: object
+      required:
+        - name
+        - email
       properties:
         _id:
           type: string
+          description: Developer ID
         name:
           type: string
+          description: Developer name
         email:
           type: string
+          format: email
+          description: Developer email
         skills:
           type: array
           items:
             type: string
+          description: Array of skills
         bio:
           type: string
+          description: Developer biography
         location:
           type: string
+          description: Developer location
         github:
           type: string
+          description: GitHub profile URL
         website:
           type: string
+          description: Personal website URL
     Project:
       type: object
+      required:
+        - title
+        - description
       properties:
-        _id: { type: string }
-        title: { type: string }
-        description: { type: string }
+        _id:
+          type: string
+          description: Project ID
+        title:
+          type: string
+          description: Project title
+        description:
+          type: string
+          description: Project description
         techStack:
           type: array
           items:
             type: string
-        developer: { type: string }
+          description: Technologies used
+        developer:
+          type: string
+          description: Developer ID reference
     Tool:
       type: object
+      required:
+        - name
+        - category
       properties:
-        _id: { type: string }
-        name: { type: string }
-        category: { type: string }
-        project: { type: string }
+        _id:
+          type: string
+          description: Tool ID
+        name:
+          type: string
+          description: Tool name
+        category:
+          type: string
+          description: Tool category
+        project:
+          type: string
+          description: Project ID reference

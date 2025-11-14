@@ -1,11 +1,14 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
 
 dotenv.config();
 connectDB();
 
 const app = express();
+const swaggerDocument = YAML.load('./docs/swagger.yaml');
 app.use(express.json());
 
 // add CORS
@@ -23,13 +26,10 @@ const toolRoutes = require('./routes/toolRoutes');
 app.use('/api/tools', toolRoutes);
 
 // Swagger
-const swaggerUi = require('swagger-ui-express');
-const YAML = require('yamljs');
-const swaggerDocument = YAML.load('./docs/swagger.yaml');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Error handler (after routes)
-const errorHandler = require('./middleware/errorHandler');
+const errorHandler = require('./middleware/errorHandler'); // Ensure this is a function
 app.use(errorHandler);
 
 // listen at the end
