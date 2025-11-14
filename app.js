@@ -8,6 +8,16 @@ connectDB();
 const app = express();
 app.use(express.json());
 
+require('dotenv').config();
+const mongoose = require('mongoose');
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('MongoDB connected'))
+.catch(err => console.error('MongoDB connection error:', err));
+
 // add CORS
 const cors = require('cors');
 app.use(cors());
