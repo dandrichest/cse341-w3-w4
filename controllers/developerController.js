@@ -1,36 +1,50 @@
 const Developer = require('../models/Developer');
 
-exports.getAllDevelopers = async (req, res) => {
-  const devs = await Developer.find();
-  res.json(devs);
-};
-
-exports.createDeveloper = async (req, res) => {
+exports.getAllDevelopers = async (req, res, next) => {
   try {
-    const newDev = new Developer(req.body);
-    await newDev.save();
-    res.status(201).json(newDev);
+    const developers = await Developer.find();
+    res.json(developers);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    next(err);
   }
 };
 
-exports.updateDeveloper = async (req, res) => {
+exports.getDeveloper = async (req, res, next) => {
+  try {
+    const developer = await Developer.findById(req.params.id);
+    if (!developer) return res.status(404).json({ error: 'Developer not found' });
+    res.json(developer);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.createDeveloper = async (req, res, next) => {
+  try {
+    const newDeveloper = new Developer(req.body);
+    await newDeveloper.save();
+    res.status(201).json(newDeveloper);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateDeveloper = async (req, res, next) => {
   try {
     const updated = await Developer.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!updated) return res.status(404).json({ error: 'Developer not found' });
     res.json(updated);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    next(err);
   }
 };
 
-exports.deleteDeveloper = async (req, res) => {
+exports.deleteDeveloper = async (req, res, next) => {
   try {
     const deleted = await Developer.findByIdAndDelete(req.params.id);
     if (!deleted) return res.status(404).json({ error: 'Developer not found' });
     res.json({ message: 'Developer deleted' });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    next(err);
   }
 };

@@ -1,16 +1,21 @@
 const express = require('express');
 const router = express.Router();
+
+const ensureAuth = require('../middleware/ensureAuth');
+const validateTool = require('../middleware/validateTool');
+
 const {
   getAllTools,
+  getTool,
   createTool,
   updateTool,
   deleteTool
 } = require('../controllers/toolController');
-const { validateTool } = require('../middleware/validateTool');
 
 router.get('/', getAllTools);
-router.post('/', validateTool, createTool); // keep single validated POST
-router.put('/:id', validateTool, updateTool);
-router.delete('/:id', deleteTool);
+router.get('/:id', getTool);
+router.post('/', ensureAuth, ...validateTool, createTool);
+router.put('/:id', ensureAuth, ...validateTool, updateTool);
+router.delete('/:id', ensureAuth, deleteTool);
 
 module.exports = router;

@@ -15,21 +15,24 @@ app.use(express.json());
 const cors = require('cors');
 app.use(cors());
 
-// Routes
+// Mount auth routes (JWT)
+const authRoutes = require('./routes/authRoutes');
+app.use('/auth', authRoutes);
+
+// Mount API routes
 const developerRoutes = require('./routes/developerRoutes');
-app.use('/api/developers', developerRoutes);
-
 const projectRoutes = require('./routes/projectRoutes');
-app.use('/api/projects', projectRoutes);
-
 const toolRoutes = require('./routes/toolRoutes');
+
+app.use('/api/developers', developerRoutes);
+app.use('/api/projects', projectRoutes);
 app.use('/api/tools', toolRoutes);
 
 // Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Error handler (after routes)
-const errorHandler = require('./middleware/errorHandler'); // Ensure this is a function
+const errorHandler = require('./middleware/errorHandler');
 app.use(errorHandler);
 
 // listen at the end

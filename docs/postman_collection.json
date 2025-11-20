@@ -1,0 +1,93 @@
+{ "info": { "name": "DevConnect API - JWT", "_postman_id": "devconnect-jwt", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json" }, "item": [ {
+  "info": {
+    "name": "DevConnect API - JWT",
+    "_postman_id": "devconnect-jwt",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"Password123!\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/auth/register", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["auth", "register"] }
+      }
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"Password123!\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/auth/login", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["auth", "login"] }
+      }
+    },
+    {
+      "name": "Get current user (me)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "http://localhost:3000/auth/me", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["auth", "me"] }
+      }
+    },
+    {
+      "name": "Get Developers",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:3000/api/developers", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "developers"] }
+      }
+    },
+    {
+      "name": "Create Developer (protected)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Ada Lovelace\",\n  \"email\": \"ada@example.com\",\n  \"skills\": [\"Mathematics\",\"Analytical Engine\",\"Programming\"],\n  \"bio\": \"First computer programmer\",\n  \"location\": \"London\",\n  \"github\": \"https://github.com/ada\",\n  \"website\": \"https://ada.dev\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/api/developers", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "developers"] }
+      }
+    },
+    {
+      "name": "Create Project (protected)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Demo Project\",\n  \"description\": \"Test project\",\n  \"techStack\": [\"Node.js\",\"MongoDB\"],\n  \"developer\": \"691639264ee69ea8f91b1b09\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/api/projects", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "projects"] }
+      }
+    },
+    {
+      "name": "Create Tool (protected)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"VS Code\",\n  \"category\": \"IDE\",\n  \"project\": \"<projectId>\"\n}"
+        },
+        "url": { "raw": "http://localhost:3000/api/tools", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["api", "tools"] }
+      }
+    }
+  ]
+} ] }

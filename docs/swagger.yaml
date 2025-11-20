@@ -2,252 +2,383 @@ openapi: 3.0.0
 info:
   title: DevConnect API
   version: 1.0.0
-  description: API for managing developers, projects, and tools
+  description: API for managing developers, projects, and tools with JWT authentication
 servers:
   - url: /
     description: Current server
-paths:
-  /api/developers:
-    get:
-      summary: Get all developers
-      responses:
-        '200':
-          description: A list of developers
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Developer'
-    post:
-      summary: Create a developer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Developer'
-      responses:
-        '201':
-          description: Developer created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Developer'
-  /api/developers/{id}:
-    put:
-      summary: Update a developer
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Developer'
-      responses:
-        '200':
-          description: Developer updated successfully
-    delete:
-      summary: Delete a developer
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Developer deleted successfully
-  /api/projects:
-    get:
-      summary: Get all projects
-      responses:
-        '200':
-          description: A list of projects
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Project'
-    post:
-      summary: Create a project
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Project'
-      responses:
-        '201':
-          description: Project created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Project'
-  /api/projects/{id}:
-    put:
-      summary: Update a project
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Project'
-      responses:
-        '200':
-          description: Project updated successfully
-    delete:
-      summary: Delete a project
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Project deleted successfully
-  /api/tools:
-    get:
-      summary: Get all tools
-      responses:
-        '200':
-          description: A list of tools
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Tool'
-    post:
-      summary: Create a tool
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Tool'
-      responses:
-        '201':
-          description: Tool created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Tool'
-  /api/tools/{id}:
-    put:
-      summary: Update a tool
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Tool'
-      responses:
-        '200':
-          description: Tool updated successfully
-    delete:
-      summary: Delete a tool
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Tool deleted successfully
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token for authentication
   schemas:
+    User:
+      type: object
+      properties:
+        _id: { type: string }
+        name: { type: string }
+        email: { type: string, format: email }
+        provider: { type: string, enum: [local, google] }
+        avatar: { type: string }
+        roles: { type: array, items: { type: string } }
+        createdAt: { type: string, format: date-time }
     Developer:
       type: object
       required:
         - name
         - email
       properties:
-        _id:
-          type: string
-          description: Developer ID
-        name:
-          type: string
-          description: Developer name
-        email:
-          type: string
-          format: email
-          description: Developer email
-        skills:
-          type: array
-          items:
-            type: string
-          description: Array of skills
-        bio:
-          type: string
-          description: Developer biography
-        location:
-          type: string
-          description: Developer location
-        github:
-          type: string
-          description: GitHub profile URL
-        website:
-          type: string
-          description: Personal website URL
+        _id: { type: string, example: "691639264ee69ea8f91b1b09" }
+        name: { type: string, example: "Ada Lovelace" }
+        email: { type: string, format: email, example: "ada@example.com" }
+        skills: { type: array, items: { type: string }, example: ["JavaScript", "Python"] }
+        bio: { type: string, example: "First computer programmer" }
+        location: { type: string, example: "London" }
+        github: { type: string, example: "https://github.com/adalovelace" }
+        website: { type: string, example: "https://adalovelace.dev" }
+        createdAt: { type: string, format: date-time }
     Project:
       type: object
       required:
         - title
         - description
       properties:
-        _id:
-          type: string
-          description: Project ID
-        title:
-          type: string
-          description: Project title
-        description:
-          type: string
-          description: Project description
-        techStack:
-          type: array
-          items:
-            type: string
-          description: Technologies used
-        developer:
-          type: string
-          description: Developer ID reference
+        _id: { type: string }
+        title: { type: string, example: "DevConnect API" }
+        description: { type: string, example: "REST API for managing developers" }
+        techStack: { type: array, items: { type: string }, example: ["Node.js", "Express", "MongoDB"] }
+        developer: { type: string, description: "Developer ID reference" }
     Tool:
       type: object
       required:
         - name
         - category
       properties:
-        _id:
-          type: string
-          description: Tool ID
-        name:
-          type: string
-          description: Tool name
-        category:
-          type: string
-          description: Tool category
-        project:
-          type: string
-          description: Project ID reference
+        _id: { type: string }
+        name: { type: string, example: "VS Code" }
+        category: { type: string, example: "IDE" }
+        project: { type: string, description: "Project ID reference" }
+
+paths:
+  /auth/register:
+    post:
+      summary: Register a new local user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                email: { type: string }
+                password: { type: string }
+              required: [email, password]
+      responses:
+        '201':
+          description: User created, returns JWT token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user: { $ref: '#/components/schemas/User' }
+                  token: { type: string, description: JWT token }
+        '409': { description: Email already registered }
+        '400': { description: Email and password required }
+
+  /auth/login:
+    post:
+      summary: Local login with email and password
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+                password: { type: string }
+              required: [email, password]
+      responses:
+        '200':
+          description: Login successful, returns JWT token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user: { $ref: '#/components/schemas/User' }
+                  token: { type: string }
+        '401': { description: Invalid credentials }
+
+  /auth/google:
+    get:
+      summary: Initiate Google OAuth login
+      tags: [Auth]
+      responses:
+        '302': { description: Redirect to Google OAuth consent screen }
+
+  /auth/google/callback:
+    get:
+      summary: Google OAuth callback (handled by Passport)
+      tags: [Auth]
+      responses:
+        '200': { description: OAuth successful, returns JWT token }
+        '302': { description: Redirect on failure }
+
+  /auth/logout:
+    get:
+      summary: Logout and destroy session
+      tags: [Auth]
+      responses:
+        '200': { description: Logged out successfully }
+
+  /auth/me:
+    get:
+      summary: Get current authenticated user
+      tags: [Auth]
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Current user info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user: { $ref: '#/components/schemas/User' }
+        '401': { description: Not authenticated }
+
+  /api/developers:
+    get:
+      summary: Get all developers
+      tags: [Developers]
+      responses:
+        '200':
+          description: List of developers
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Developer' }
+    post:
+      summary: Create a developer (requires authentication)
+      tags: [Developers]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Developer' }
+      responses:
+        '201': { description: Developer created }
+        '401': { description: Unauthorized }
+
+  /api/developers/{id}:
+    get:
+      summary: Get a developer by ID
+      tags: [Developers]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Developer found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Developer' }
+        '404': { description: Developer not found }
+    put:
+      summary: Update a developer (requires authentication)
+      tags: [Developers]
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Developer' }
+      responses:
+        '200': { description: Developer updated }
+        '401': { description: Unauthorized }
+        '404': { description: Developer not found }
+    delete:
+      summary: Delete a developer (requires authentication)
+      tags: [Developers]
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Developer deleted }
+        '401': { description: Unauthorized }
+        '404': { description: Developer not found }
+
+  /api/projects:
+    get:
+      summary: Get all projects
+      tags: [Projects]
+      responses:
+        '200':
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Project' }
+    post:
+      summary: Create a project (requires authentication)
+      tags: [Projects]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Project' }
+      responses:
+        '201': { description: Project created }
+        '401': { description: Unauthorized }
+
+  /api/projects/{id}:
+    get:
+      summary: Get a project by ID
+      tags: [Projects]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Project found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Project' }
+        '404': { description: Project not found }
+    put:
+      summary: Update a project (requires authentication)
+      tags: [Projects]
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Project' }
+      responses:
+        '200': { description: Project updated }
+        '401': { description: Unauthorized }
+        '404': { description: Project not found }
+    delete:
+      summary: Delete a project (requires authentication)
+      tags: [Projects]
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Project deleted }
+        '401': { description: Unauthorized }
+        '404': { description: Project not found }
+
+  /api/tools:
+    get:
+      summary: Get all tools
+      tags: [Tools]
+      responses:
+        '200':
+          description: List of tools
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Tool' }
+    post:
+      summary: Create a tool (requires authentication)
+      tags: [Tools]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Tool' }
+      responses:
+        '201': { description: Tool created }
+        '401': { description: Unauthorized }
+
+  /api/tools/{id}:
+    get:
+      summary: Get a tool by ID
+      tags: [Tools]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Tool found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Tool' }
+        '404': { description: Tool not found }
+    put:
+      summary: Update a tool (requires authentication)
+      tags: [Tools]
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Tool' }
+      responses:
+        '200': { description: Tool updated }
+        '401': { description: Unauthorized }
+        '404': { description: Tool not found }
+    delete:
+      summary: Delete a tool (requires authentication)
+      tags: [Tools]
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Tool deleted }
+        '401': { description: Unauthorized }
+        '404': { description: Tool not found }

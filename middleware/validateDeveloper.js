@@ -1,10 +1,13 @@
 const { body, validationResult } = require('express-validator');
 
-exports.validateDeveloper = [
+const validateDeveloper = [
   body('name').notEmpty().withMessage('Name is required'),
   body('email').isEmail().withMessage('Valid email is required'),
   body('skills').isArray().withMessage('Skills must be an array'),
-
+  body('bio').optional().isString(),
+  body('location').optional().isString(),
+  body('github').optional().isURL(),
+  body('website').optional().isURL(),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -13,3 +16,5 @@ exports.validateDeveloper = [
     next();
   }
 ];
+
+module.exports = validateDeveloper;
