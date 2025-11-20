@@ -20,8 +20,6 @@ components:
         _id: { type: string }
         name: { type: string }
         email: { type: string, format: email }
-        provider: { type: string, enum: [local, google] }
-        avatar: { type: string }
         roles: { type: array, items: { type: string } }
         createdAt: { type: string, format: date-time }
     Developer:
@@ -30,14 +28,14 @@ components:
         - name
         - email
       properties:
-        _id: { type: string, example: "691639264ee69ea8f91b1b09" }
-        name: { type: string, example: "Ada Lovelace" }
-        email: { type: string, format: email, example: "ada@example.com" }
-        skills: { type: array, items: { type: string }, example: ["JavaScript", "Python"] }
-        bio: { type: string, example: "First computer programmer" }
-        location: { type: string, example: "London" }
-        github: { type: string, example: "https://github.com/adalovelace" }
-        website: { type: string, example: "https://adalovelace.dev" }
+        _id: { type: string }
+        name: { type: string }
+        email: { type: string, format: email }
+        skills: { type: array, items: { type: string } }
+        bio: { type: string }
+        location: { type: string }
+        github: { type: string }
+        website: { type: string }
         createdAt: { type: string, format: date-time }
     Project:
       type: object
@@ -46,10 +44,10 @@ components:
         - description
       properties:
         _id: { type: string }
-        title: { type: string, example: "DevConnect API" }
-        description: { type: string, example: "REST API for managing developers" }
-        techStack: { type: array, items: { type: string }, example: ["Node.js", "Express", "MongoDB"] }
-        developer: { type: string, description: "Developer ID reference" }
+        title: { type: string }
+        description: { type: string }
+        techStack: { type: array, items: { type: string } }
+        developer: { type: string }
     Tool:
       type: object
       required:
@@ -57,14 +55,14 @@ components:
         - category
       properties:
         _id: { type: string }
-        name: { type: string, example: "VS Code" }
-        category: { type: string, example: "IDE" }
-        project: { type: string, description: "Project ID reference" }
+        name: { type: string }
+        category: { type: string }
+        project: { type: string }
 
 paths:
   /auth/register:
     post:
-      summary: Register a new local user
+      summary: Register a new user
       tags: [Auth]
       requestBody:
         required: true
@@ -86,13 +84,12 @@ paths:
                 type: object
                 properties:
                   user: { $ref: '#/components/schemas/User' }
-                  token: { type: string, description: JWT token }
+                  token: { type: string }
         '409': { description: Email already registered }
-        '400': { description: Email and password required }
 
   /auth/login:
     post:
-      summary: Local login with email and password
+      summary: Login with email and password
       tags: [Auth]
       requestBody:
         required: true
@@ -115,28 +112,6 @@ paths:
                   user: { $ref: '#/components/schemas/User' }
                   token: { type: string }
         '401': { description: Invalid credentials }
-
-  /auth/google:
-    get:
-      summary: Initiate Google OAuth login
-      tags: [Auth]
-      responses:
-        '302': { description: Redirect to Google OAuth consent screen }
-
-  /auth/google/callback:
-    get:
-      summary: Google OAuth callback (handled by Passport)
-      tags: [Auth]
-      responses:
-        '200': { description: OAuth successful, returns JWT token }
-        '302': { description: Redirect on failure }
-
-  /auth/logout:
-    get:
-      summary: Logout and destroy session
-      tags: [Auth]
-      responses:
-        '200': { description: Logged out successfully }
 
   /auth/me:
     get:
@@ -191,11 +166,7 @@ paths:
           required: true
           schema: { type: string }
       responses:
-        '200':
-          description: Developer found
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Developer' }
+        '200': { description: Developer found, content: { application/json: { schema: { $ref: '#/components/schemas/Developer' } } } }
         '404': { description: Developer not found }
     put:
       summary: Update a developer (requires authentication)
@@ -267,11 +238,7 @@ paths:
           required: true
           schema: { type: string }
       responses:
-        '200':
-          description: Project found
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Project' }
+        '200': { description: Project found, content: { application/json: { schema: { $ref: '#/components/schemas/Project' } } } }
         '404': { description: Project not found }
     put:
       summary: Update a project (requires authentication)
@@ -343,11 +310,7 @@ paths:
           required: true
           schema: { type: string }
       responses:
-        '200':
-          description: Tool found
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Tool' }
+        '200': { description: Tool found, content: { application/json: { schema: { $ref: '#/components/schemas/Tool' } } } }
         '404': { description: Tool not found }
     put:
       summary: Update a tool (requires authentication)
